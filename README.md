@@ -150,8 +150,10 @@ YaMusicTG/
 
 ## Лицензия
 
-Проект распространяется по собственной **Source-Available Non-Commercial License**.
+Проект распространяется по собственной Source-Available Non-Commercial License.
 
-Вы можете просматривать, изменять и распространять код в некоммерческих целях. Коммерческое использование без отдельного разрешения правообладателя запрещено.
+Исходный код можно просматривать, изменять, форкать и использовать в некоммерческих целях. Коммерческое использование без отдельного разрешения правообладателя запрещено.
 
-См. [**LICENSE**](https://github.com/Mindcors/YaMusicTg/blob/main/LICENSE.md) файл с полными условиями лицензии.
+См. [LICENSE](https://github.com/Mindcors/YaMusicTg/blob/main/LICENSE.md) файл с полными условиями лицензии.
+
+Contributions предоставляются в соответствии с [CLA](https://github.com/Mindcors/YaMusicTg/blob/main/CLA.md).

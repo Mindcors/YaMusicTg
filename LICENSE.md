@@ -88,13 +88,17 @@ You may publish changes to your fork and accept contributions from other individ
 
 Contributions to the Software are permitted.
 
-By submitting a contribution, including but not limited to a commit, pull request, patch, issue, documentation change, or other material, you represent that:
+By submitting a contribution, including but not limited to source code, commits, pull requests, patches, documentation, or other material, you represent that:
 
 1. you have the necessary rights to submit the contribution;
 2. the contribution does not knowingly violate the copyright or other rights of a third party;
 3. you understand that the contribution may be publicly available as part of the Software.
 
-Unless otherwise agreed in writing with the Copyright Holder, contributions are provided under the same License as the Software.
+Unless a separate Contributor License Agreement (CLA) applies, contributions are provided under the same License as the Software.
+
+If a Contributor License Agreement applies to a contribution, the terms of that CLA shall govern the licensing of that contribution to the extent permitted by the CLA.
+
+The Copyright Holder may use contributions submitted under an applicable CLA in accordance with the rights granted by that CLA, including incorporating such contributions into versions of the Software distributed under different license terms.
 
 Submitting a contribution does not grant the contributor ownership of the original Software.
 

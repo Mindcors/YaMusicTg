@@ -1,242 +1,317 @@
-PROPRIETARY NON-COMMERCIAL LICENSE
+# YaMusicTG Source-Available Non-Commercial License
+
+**Version 1.0 — September 2026**
 
 Copyright (c) 2026 Mindcors
 
 All rights reserved.
 
+---
 
-1. OWNERSHIP
+## 1. Definitions
 
-This software, including its source code, object code, binaries, scripts,
-configuration files, documentation, assets, graphics, and any other
-associated materials (collectively, the "Software"), is the exclusive
-intellectual property of the copyright holder ("Author"), except for
-third-party components that are separately identified and licensed by
-their respective copyright holders.
+For the purposes of this License:
 
-Nothing in this license transfers ownership or copyright in the Software
-to any other person or organization.
+**"Software"** means the YaMusicTG software, including its source code, compiled binaries, scripts, configuration files, documentation, assets, and other materials distributed by the Copyright Holder under this License.
 
+**"Source Code"** means the human-readable form of the Software, including source files, build scripts, configuration examples, and other files reasonably intended to allow inspection, modification, or compilation of the Software.
 
-2. NO LICENSE GRANTED
+**"Derivative Work"** means a modified version of the Software or a work based substantially on the Software or a substantial portion of its Source Code.
 
-No rights or permissions are granted to use the Software unless the Author
-has provided explicit prior written permission.
+**"Copyright Holder"** means Mindcors and any other copyright holder explicitly identified in the Software repository.
 
-In particular, downloading, viewing, accessing, possessing, or obtaining
-a copy of the Software does not constitute permission to use, modify,
-reproduce, distribute, publish, or otherwise exploit the Software.
+**"Non-Commercial Use"** means use of the Software that is not primarily intended for or directed toward commercial advantage, monetary compensation, revenue generation, or other financial benefit.
 
+**"Commercial Use"** means any use of the Software or a Derivative Work that is intended to generate revenue, financial benefit, commercial advantage, or monetary compensation, whether directly or indirectly.
 
-3. PROHIBITED ACTIVITIES
+Commercial Use includes, but is not limited to:
 
-Without explicit prior written permission from the Author, no person or
-organization may, in whole or in part:
+* selling the Software or a Derivative Work;
+* including the Software in a paid product;
+* offering the Software or a Derivative Work as part of a paid service;
+* using the Software to provide a commercial service to third parties;
+* distributing the Software as part of a commercial product;
+* monetizing a service whose functionality substantially depends on the Software;
+* licensing the Software or a Derivative Work to another party for commercial purposes;
+* using the Software in a commercial SaaS, hosted, managed, or subscription-based service;
+* charging users for access to functionality provided substantially by the Software;
+* using the Software to generate advertising, subscription, transaction, or other commercial revenue where the Software materially contributes to that revenue.
 
-- use the Software for any purpose;
-- execute or run the Software;
-- copy or reproduce the Software;
-- modify, adapt, translate, or alter the Software;
-- create derivative works based on the Software;
-- fork or otherwise create a modified version of the Software;
-- publish or republish the Software;
-- upload the Software or any portion of it to another repository;
-- distribute the Software in any form;
-- redistribute the Software;
-- sublicense the Software;
-- sell, resell, rent, lease, or otherwise commercially exploit the Software;
-- include the Software in another project;
-- incorporate the Software into another software product;
-- make the Software available as part of a service;
-- host the Software or any portion of it for third-party access;
-- provide the Software or any portion of it to third parties;
-- share the source code privately or publicly;
-- share compiled binaries or executable files;
-- publish modified or unmodified versions of the Software;
-- publish patches, modifications, forks, ports, or derivative versions
-  containing any portion of the Software;
-- remove, alter, or obscure copyright notices or other attribution;
-- use the Software as a basis for another implementation where such use
-  involves copying or substantially reproducing the Software;
-- reverse engineer, decompile, disassemble, or otherwise attempt to derive
-  source code from distributed binaries, except where such activity cannot
-  legally be restricted under applicable law.
+A use does not become Commercial Use merely because the user is employed by a company, provided that the Software itself is not being used for a commercial purpose as defined above.
 
+---
 
-4. COMMERCIAL AND NON-COMMERCIAL USE
+## 2. Copyright
 
-The restrictions in this license apply regardless of whether the intended
-use is commercial, non-commercial, educational, personal, private,
-research-related, governmental, charitable, or otherwise.
+The Software and its Source Code are protected by applicable copyright laws and international copyright treaties.
 
-The Software may not be used for any purpose without explicit prior written
-permission from the Author.
+Except for the rights expressly granted by this License, all rights, title, and interest in the Software remain with the Copyright Holder.
 
-The term "NON-COMMERCIAL" in the title of this license does not grant a
-general non-commercial usage right. It indicates that commercial use is
-prohibited and that no automatic usage rights are granted for
-non-commercial purposes.
+This License does not transfer ownership of the Software or its copyright to any recipient.
 
+---
 
-5. SOURCE CODE AND PUBLICATION
+## 3. Grant of Rights
 
-The publication of the Software on GitHub or any other publicly accessible
-platform does not constitute a grant of permission to copy, modify, fork,
-reproduce, distribute, or otherwise use the Software.
+Subject to the conditions of this License, the Copyright Holder grants you a worldwide, non-exclusive, royalty-free, revocable license to:
 
-The public availability of the source code does not place the Software in
-the public domain and does not make the Software open source.
+1. view and inspect the Source Code;
+2. download and copy the Source Code;
+3. use the Software for Non-Commercial Use;
+4. modify the Source Code;
+5. create Derivative Works for Non-Commercial Use;
+6. fork the repository;
+7. publish and maintain forks for Non-Commercial Use;
+8. submit issues, patches, commits, pull requests, and other contributions to the project;
+9. distribute copies of the Software for Non-Commercial Use;
+10. distribute modified versions for Non-Commercial Use;
+11. compile the Software into executable binaries for Non-Commercial Use;
+12. privately modify and maintain the Software for personal, educational, research, testing, or other Non-Commercial purposes.
 
-No person may create a public repository containing the Software or any
-substantial portion of the Software without explicit prior written
-permission from the Author.
+These permissions apply provided that the requirements and restrictions of this License are followed.
 
+---
 
-6. DERIVATIVE WORKS
+## 4. Source Code Availability
 
-Any modification, adaptation, translation, port, rewrite, fork, or other
-derivative work based on the Software requires explicit prior written
-permission from the Author.
+The Source Code may be publicly hosted, mirrored, forked, archived, reviewed, analyzed, modified, and redistributed for Non-Commercial purposes.
 
-Permission to create a derivative work does not automatically grant
-permission to publish, distribute, sell, sublicense, or otherwise make
-that derivative work available to third parties.
+Creating a public fork of the Software is expressly permitted.
 
+You may maintain your own fork independently from the original repository.
 
-7. THIRD-PARTY COMPONENTS
+You may publish changes to your fork and accept contributions from other individuals, provided that such activity remains Non-Commercial and complies with this License.
 
-This license applies only to material owned by the Author.
+---
 
-Third-party libraries, frameworks, dependencies, and other components
-included in or required by the Software remain subject to their respective
-licenses.
+## 5. Contributions
 
-Nothing in this license is intended to restrict rights that are expressly
-granted by applicable third-party licenses.
+Contributions to the Software are permitted.
 
-Where a third-party component is distributed separately under its own
-license, that component is not relicensed under this agreement.
+By submitting a contribution, including but not limited to a commit, pull request, patch, issue, documentation change, or other material, you represent that:
 
+1. you have the necessary rights to submit the contribution;
+2. the contribution does not knowingly violate the copyright or other rights of a third party;
+3. you understand that the contribution may be publicly available as part of the Software.
 
-8. TRADEMARKS AND BRANDING
+Unless otherwise agreed in writing with the Copyright Holder, contributions are provided under the same License as the Software.
 
-This license does not grant permission to use the Author's name,
-pseudonym, trademarks, logos, project name, branding, or other identifying
-materials in connection with modified, redistributed, or derivative
-versions of the Software.
+Submitting a contribution does not grant the contributor ownership of the original Software.
 
-Any such use requires separate explicit written permission from the Author.
+---
 
+## 6. Commercial Use Prohibited
 
-9. PERMISSION
+Commercial Use of the Software is **not permitted** under this License.
 
-The Author may grant specific permissions on a case-by-case basis.
+You may not, without prior written permission from the Copyright Holder:
 
-Any permission must be:
+* sell the Software;
+* sell a Derivative Work;
+* include the Software in a paid application or product;
+* use the Software as a component of a commercial product;
+* offer the Software as a paid service;
+* provide commercial services substantially based on the Software;
+* monetize access to the Software or its functionality;
+* distribute a commercial fork;
+* distribute a modified commercial version;
+* use the Software in a commercial SaaS or hosted service;
+* sublicense the Software for commercial use;
+* grant another person or organization commercial rights to the Software;
+* otherwise use the Software primarily for commercial advantage or monetary compensation.
 
-- explicit;
-- granted before the relevant activity takes place;
-- provided in writing by the Author; and
-- sufficiently specific to identify the permitted activity.
+This restriction applies regardless of whether the Software is distributed in source-code form, compiled form, modified form, or as part of another work.
 
-A permission granted for one activity does not imply permission for any
-other activity.
+---
 
-For example, permission to use the Software does not automatically grant
-permission to publish it, distribute it, modify it, or create derivative
-works.
+## 7. Commercial Licensing
 
+The Copyright Holder may, at their sole discretion, grant separate commercial licenses.
 
-10. REVOCATION
+A commercial license may permit uses that are prohibited by this License.
 
-Unless otherwise stated in a separate written agreement, any permission
-granted by the Author may be revoked by the Author where permitted by
-applicable law.
+No commercial rights are granted automatically by downloading, forking, modifying, compiling, or contributing to the Software.
 
-Upon revocation, the recipient must cease the activities covered by the
-revoked permission.
+Requests for commercial licensing should be directed to the Copyright Holder.
 
+A separate written commercial agreement takes precedence over the restrictions of this License only to the extent explicitly stated in that agreement.
 
-11. NO WARRANTY
+---
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, OR
-MERCHANTABILITY.
+## 8. Attribution and Copyright Notices
 
-THE AUTHOR SHALL NOT BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF,
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.
+You must retain all existing copyright notices and references to this License contained in the Source Code.
 
+When redistributing the Software or a Derivative Work, you must provide a copy of this License or a clear reference to the original License.
 
-12. LIMITATION OF LIABILITY
+You may add your own copyright notices for your modifications, but you may not remove or alter the original Copyright Holder's notices in a way that falsely suggests that the original Software was created by you.
 
-TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE AUTHOR SHALL NOT BE
-LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY,
-OR PUNITIVE DAMAGES, OR FOR LOSS OF DATA, PROFITS, REVENUE, BUSINESS,
-GOODWILL, OR OTHER LOSSES ARISING FROM OR RELATED TO THE SOFTWARE.
+You may not represent the original Software as being solely your own work.
 
+---
 
-13. TERMINATION
+## 9. Forks and Modified Versions
 
-Any unauthorized use of the Software constitutes a violation of this
-license.
+Forks and modified versions are expressly permitted for Non-Commercial Use.
 
-If a person or organization obtains permission under this license and
-violates the terms of that permission, the permission terminates
-immediately to the extent permitted by applicable law.
+You may:
 
-Upon termination, all activities not otherwise authorized by the Author
-must immediately cease.
+* create public or private forks;
+* rename your fork;
+* modify the user interface;
+* modify the Source Code;
+* add new features;
+* remove existing features;
+* fix bugs;
+* change configuration;
+* create experimental versions;
+* publish compiled builds;
+* maintain a separate development branch.
 
+A fork does not require approval from the Copyright Holder provided that it complies with this License.
 
-14. COPYRIGHT NOTICE
+However, a fork must not be presented as the official YaMusicTG project unless explicitly authorized by the Copyright Holder.
 
-Copyright notices, license notices, and attribution notices included with
-the Software must not be removed, modified, or obscured without explicit
-prior written permission from the Author.
+---
 
+## 10. Project Names and Trademarks
 
-15. NO IMPLIED RIGHTS
+This License does not grant permission to use the names, logos, trademarks, service marks, or branding of the Copyright Holder except as necessary to accurately identify the original Software.
 
-No rights are granted by implication, estoppel, exhaustion, or otherwise,
-except for rights that cannot legally be excluded under applicable law.
+You may state that your project is a fork or derivative of YaMusicTG.
 
+You may not falsely imply that your fork, modified version, or distribution is officially maintained, endorsed, or supported by the Copyright Holder.
 
-16. RESERVATION OF RIGHTS
+---
 
-All rights not expressly granted by the Author are reserved.
+## 11. No Obligation to Contribute
 
-The absence of a prohibition on a particular activity does not constitute
-permission to perform that activity.
+You are not required to submit your modifications to the original project.
 
+You may keep modifications private or maintain them in a separate public repository, provided that your use remains within the permissions granted by this License.
 
-17. APPLICABLE LAW
+If you choose to contribute modifications to the original project, those contributions are subject to Section 5 of this License.
 
-This license shall be interpreted and enforced to the maximum extent
-permitted by the applicable laws governing the relevant use of the
-Software.
+---
 
-Nothing in this license is intended to waive rights or remedies that the
-Author may have under applicable copyright, intellectual property, or
-other laws.
+## 12. No Warranty
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, OR ANY OTHER WARRANTY.
 
-18. CONTACT AND PERMISSION REQUESTS
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE COPYRIGHT HOLDER SHALL NOT BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM OR RELATED TO THE SOFTWARE OR ITS USE, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE.
 
-Requests for permission to use, modify, publish, distribute, fork, or
-otherwise use the Software should be directed to the Author.
+THE SOFTWARE MAY CONTAIN BUGS, ERRORS, OR SECURITY VULNERABILITIES. THE COPYRIGHT HOLDER DOES NOT GUARANTEE THAT THE SOFTWARE WILL OPERATE WITHOUT INTERRUPTION OR ERROR.
 
-Permission is valid only when explicitly granted by the Author in writing.
+---
 
+## 13. Third-Party Components
 
-19. FINAL NOTICE
+The Software may depend on third-party libraries, frameworks, services, or other components.
 
-UNLESS YOU HAVE RECEIVED EXPLICIT PRIOR WRITTEN PERMISSION FROM THE AUTHOR,
-YOU ARE NOT AUTHORIZED TO USE, COPY, MODIFY, FORK, PUBLISH, DISTRIBUTE,
-REPRODUCE, OR OTHERWISE EXPLOIT THIS SOFTWARE OR ANY SUBSTANTIAL PORTION
-OF IT.
+Such components are not necessarily covered by this License.
 
-BY ACCESSING THE SOFTWARE, YOU ACKNOWLEDGE THAT THE SOFTWARE IS PROPRIETARY
-AND THAT ALL RIGHTS NOT EXPRESSLY GRANTED ARE RESERVED BY THE AUTHOR.
+Each third-party component remains subject to its own applicable license.
+
+Nothing in this License is intended to modify, restrict, or replace the license terms of third-party components.
+
+Where required by the applicable license of a third-party component, its copyright notices and license terms must be retained.
+
+---
+
+## 14. No Patent Grant
+
+This License does not grant any patent license or other patent rights.
+
+Any patent rights, if applicable, remain with their respective owners unless expressly granted under a separate written agreement.
+
+---
+
+## 15. License Compatibility
+
+This License is a source-available, non-commercial license and is not intended to be an Open Source license.
+
+The Software may therefore not be combined, redistributed, or relicensed in a manner that would require the Copyright Holder to grant commercial rights not provided by this License.
+
+Third-party components may be used according to their own licenses, provided that their inclusion does not impose obligations inconsistent with this License.
+
+---
+
+## 16. License Termination
+
+Any rights granted under this License automatically terminate if you materially violate its terms.
+
+Upon termination, you must cease the use, distribution, and other activities involving the Software that are no longer authorized by this License.
+
+Termination does not affect rights that were lawfully exercised before the violation, except where applicable law provides otherwise.
+
+The Copyright Holder may restore rights to a recipient by providing explicit written permission.
+
+---
+
+## 17. Automatic Termination for Commercial Use
+
+Any unauthorized Commercial Use constitutes a material violation of this License.
+
+If you use the Software for Commercial Use without obtaining the necessary commercial permission, the rights granted under this License terminate automatically upon such use.
+
+Continued Commercial Use after termination is not authorized by this License.
+
+---
+
+## 18. No Sublicensing
+
+You may not sublicense the Software or grant third parties rights broader than those granted to you by this License.
+
+You may distribute copies of the Software to others for Non-Commercial Use, provided that the recipients receive the Software under this License and are informed of its restrictions.
+
+---
+
+## 19. Transfer of Rights
+
+You may transfer a copy of the Software to another person for Non-Commercial Use.
+
+You may not transfer or assign commercial rights that you do not possess.
+
+Any recipient of the Software receives only the rights granted by this License.
+
+---
+
+## 20. Changes to the License
+
+The Copyright Holder may publish future versions of this License.
+
+Each version will be identified by a version number.
+
+Unless explicitly stated otherwise, versions of the Software already distributed under this License remain subject to the version of the License applicable to that release.
+
+The Copyright Holder may additionally offer the Software under different license terms at their discretion.
+
+---
+
+## 21. Severability
+
+If any provision of this License is determined to be invalid, unenforceable, or contrary to applicable law, that provision shall be interpreted to the maximum extent permitted by law.
+
+The remaining provisions shall remain in effect to the extent permitted by applicable law.
+
+---
+
+## 22. Entire Agreement
+
+This License constitutes the complete agreement regarding the rights granted to the Software under these terms.
+
+Any additional permissions must be granted in writing by the Copyright Holder.
+
+---
+
+## 23. Acceptance
+
+By using, copying, modifying, compiling, distributing, or creating a fork of the Software, you acknowledge that you have read and understood this License and agree to comply with its terms.
+
+If you do not agree to these terms, you may not use, modify, distribute, or otherwise exercise the rights granted by this License.
+
+---
+
+**Copyright (c) 2026 Mindcors**
+
+**YaMusicTG Source-Available Non-Commercial License — Version 1.0**

@@ -130,6 +130,7 @@ YaMusicTG/
 ├── tray.py
 ├── console_manager.py
 ├── settings.py
+├── version.py
 ├── icon.ico
 └── ...
 ```
@@ -147,6 +148,8 @@ YaMusicTG/
 **`console_manager.py`** — управление консольным окном приложения.
 
 **`settings.py`** — загрузка и сохранение настроек.
+
+**`version.py`** - Обновление и проверка версии.
 
 ## Лицензия
 

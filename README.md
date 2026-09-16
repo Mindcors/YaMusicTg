@@ -72,7 +72,7 @@ py -3.12 -m pip install pyinstaller
 Сборка:
 
 ```bash
-py -3.12 -m PyInstaller --onefile --windowed --name YaMusicTG --icon icon.ico app.py
+py -3.12 -m PyInstaller --onefile --windowed --clean --noconfirm --name YaMusicTG --icon=icon.ico --add-data "icon.ico;." --hidden-import pystray --hidden-import PIL --hidden-import PIL.Image --hidden-import PIL.ImageDraw --collect-all pystray main.py
 ```
 
 После успешной сборки исполняемый файл будет находиться в:

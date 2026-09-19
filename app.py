@@ -52,7 +52,7 @@ class Application:
         self._last_status: str = ""
         self._last_update = 0.0
         self._status_sent = True
-        self.settings = load_settings()
+        self.settings = None
 
     @property
     def console_visible(self) ->bool:
@@ -63,6 +63,9 @@ class Application:
         self.logger.info("Application started")
 
         self.show_console()
+        
+        self.settings = load_settings()
+        
         check_for_updates()
 
         self.loop = asyncio.get_running_loop()

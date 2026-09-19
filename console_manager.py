@@ -8,7 +8,6 @@ import threading
 from ctypes import wintypes
 
 import msvcrt
-import win32con
 
 
 class ConsoleManager:
@@ -30,7 +29,7 @@ class ConsoleManager:
 
     FILE_ATTRIBUTE_NORMAL = 0x80
 
-    def __init__(self, title="MusicTG"):
+    def __init__(self, title="YaMusicTG"):
 
         self.title = title
 
@@ -109,9 +108,9 @@ class ConsoleManager:
 
                 if menu:
                     self.user32.DeleteMenu(
-                        menu,
-                        win32con.SC_CLOSE,
-                        win32con.MF_BYCOMMAND,
+                    menu,
+                    0xF060,
+                    0x00000000, 
                     )
 
                     self.user32.DrawMenuBar(hwnd)

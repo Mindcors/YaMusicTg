@@ -59,44 +59,53 @@ class Application:
         return self._console_visible
 
     async def run(self):
-
         self.logger.info("Application started")
 
         self.show_console()
-        
         self.settings = load_settings()
-        
+
         check_for_updates()
 
         self.loop = asyncio.get_running_loop()
 
         self._shutdown_event = asyncio.Event()
-
         self._shutdown_lock = asyncio.Lock()
 
         try:
+            try:
+                await self._start_telegram()
 
-            await self._start_telegram()
+                self.logger.info("Telegram ready")
 
-            self.logger.info("Telegram ready")
+                await self.detector.connect()
+                self.logger.info("Music detector connected")
 
-            await self.detector.connect()
+                await self.tray.start()
+                self.logger.info("Tray started")
 
-            self.logger.info("Music detector connected")
+                self.create_task(
+                    self._status_loop(),
+                    name="StatusLoop",
+                )
 
-            await self.tray.start()
+                await self._shutdown_event.wait()
 
-            self.logger.info("Tray started")
+            except Exception as e:
+                self.logger.exception("Application startup failed")
 
-            self.create_task(
-                self._status_loop(),
-                name="StatusLoop",
-            )
+                print()
+                print("\033[91m[YaMusicTG] Не удалось запустить программу.\033[0m")
+                print(f"\033[91m[YaMusicTG] Ошибка: {e}\033[0m")
+                print()
+                print("Программа остановлена из-за ошибки.")
+                print()
 
-            await self._shutdown_event.wait()
+                await asyncio.to_thread(
+                    input,
+                    "Нажмите Enter для выхода..."
+                )
 
         finally:
-
             await self._cancel_tasks()
 
     async def _start_telegram(self):

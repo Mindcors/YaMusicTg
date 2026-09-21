@@ -54,7 +54,7 @@ cd YaMusicTG
 **2. Установите зависимости:**
 
 ```bash
-py -3.12 -m pip install telethon winsdk pyinstaller
+py -3.12 -m pip install telethon winsdk pyinstaller python-socks
 ```
 
 **3. Запустите приложение:**
@@ -109,7 +109,7 @@ py -3.12 -m PyInstaller YaMusicTG.spec
 
 ## MTProto Proxy
 
-Приложение поддерживает подключение к Telegram через MTProto Proxy. Параметры задаются при первом запуске
+Приложению необходимо подключение к Telegram через MTProto Proxy. Параметры задаются при первом запуске. 
 
 ---
 

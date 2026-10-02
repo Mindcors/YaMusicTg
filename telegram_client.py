@@ -141,7 +141,7 @@ class TelegramProfile:
                 if attempt == 2:
                     self.logger.exception("Telegram login code was invalid")
                     raise
-                print("Invalid code. Please try again.")
+                print("  \033[91m✗\033[0m Неверный код. Попробуйте ещё раз.")
             except PhoneCodeExpiredError:
                 self.logger.exception("Telegram login code expired")
                 raise

@@ -27,12 +27,10 @@ def _parse_version(version: str) -> tuple[int, ...]:
 
 
 def check_for_updates() -> None:
-
-    print(f"YaMusicTG v{VERSION}")
-    print("Checking for updates...")
+    print(f"  Версия: \033[1mv{VERSION}\033[0m")
+    print("  Проверка обновлений...", end=" ", flush=True)
 
     try:
-
         request = urllib.request.Request(
             GITHUB_API_URL,
             headers={
@@ -41,57 +39,27 @@ def check_for_updates() -> None:
             },
         )
 
-        with urllib.request.urlopen(
-            request,
-            timeout=5,
-        ) as response:
-
-            data = json.loads(
-                response.read().decode("utf-8")
-            )
+        with urllib.request.urlopen(request, timeout=5) as response:
+            data = json.loads(response.read().decode("utf-8"))
 
         latest_version = data.get("tag_name", "").strip()
-
         if not latest_version:
-            raise RuntimeError(
-                "GitHub release does not contain a version tag"
-            )
+            raise RuntimeError("GitHub release does not contain a version tag")
 
         current = _parse_version(VERSION)
         latest = _parse_version(latest_version)
 
         if latest > current:
-
+            print("\033[93m!\033[0m")
             print()
-            print(
-                "\033[93m"
-                "[YaMusicTG] New version available!"
-                "\033[0m"
-            )
-
-            print(
-                f"Current version: v{VERSION}"
-            )
-
-            print(
-                f"Latest version:  {latest_version}"
-            )
-
-            print(
-                "Download: "
-                "https://github.com/Mindcors/YaMusicTg/releases/latest"
-            )
-
+            print("  \033[93mДоступна новая версия!\033[0m")
+            print(f"  Текущая версия: v{VERSION}")
+            print(f"  Новая версия:   {latest_version}")
+            print("  Скачать: https://github.com/Mindcors/YaMusicTg/releases/latest")
         else:
-
-            print(
-                f"YaMusicTG is up to date (v{VERSION})."
-            )
+            print("\033[92m✓\033[0m")
+            print(f"  Версия актуальна (v{VERSION})")
 
     except Exception as e:
-
-        print(
-            f"\033[91m"
-            f"[YaMusicTG] Update check failed: {e}"
-            f"\033[0m"
-        )
+        print("\033[91m✗\033[0m")
+        print(f"  Не удалось проверить обновления: {e}")

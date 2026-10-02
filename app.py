@@ -29,7 +29,7 @@ class Application:
 
         self.logger = self._create_logger()
 
-        self.console = ConsoleManager("MusicTG")
+        self.console = ConsoleManager("YaMusicTG")
 
         self.telegram = TelegramProfile(
             logger=self.logger.getChild("telegram")
@@ -62,12 +62,13 @@ class Application:
         self.logger.info("Application started")
 
         self.show_console()
-        self.settings = load_settings()
+        self._print_header()
 
+        self.settings = load_settings()
         check_for_updates()
+        self._print_separator()
 
         self.loop = asyncio.get_running_loop()
-
         self._shutdown_event = asyncio.Event()
         self._shutdown_lock = asyncio.Lock()
 
@@ -76,9 +77,11 @@ class Application:
                 await self._start_telegram()
 
                 self.logger.info("Telegram ready")
+                self._print_separator()
 
                 await self.detector.connect()
                 self.logger.info("Music detector connected")
+                self._print_section_ok("Музыкальный монитор", "Подключение к Media Session установлено")
 
                 await self.tray.start()
                 self.logger.info("Tray started")
@@ -94,15 +97,15 @@ class Application:
                 self.logger.exception("Application startup failed")
 
                 print()
-                print("\033[91m[YaMusicTG] Не удалось запустить программу.\033[0m")
-                print(f"\033[91m[YaMusicTG] Ошибка: {e}\033[0m")
+                print("\033[91m✗ Не удалось запустить программу\033[0m")
+                print(f"Ошибка: {e}")
                 print()
-                print("Программа остановлена из-за ошибки.")
+                print("Консоль останется открытой для просмотра ошибки.")
                 print()
 
                 await asyncio.to_thread(
                     input,
-                    "Нажмите Enter для выхода..."
+                    "Нажмите Enter для выхода... "
                 )
 
         finally:
@@ -110,28 +113,67 @@ class Application:
 
     async def _start_telegram(self):
         self.show_console()
+
+        self._print_section("Подключение к Telegram")
+        print("Подключение...", end=" ", flush=True)
         await self.telegram.connect()
-        print("Connecting to Telegram...")
+        print("\033[92m✓\033[0m")
 
+        print("Проверка авторизации...", end=" ", flush=True)
         authorized = await self.telegram.is_authorized()
-        print("Checking authorization...")
-        if not authorized:
+        print("\033[92m✓\033[0m")
 
+        if not authorized:
             self.show_console()
-            print("Authorization required.")
+            print()
+            print("Требуется авторизация.")
+            print()
 
             try:
-
                 await self.telegram.authorize_interactively()
-
             finally:
-
                 self.hide_console()
 
         await self.telegram.start_authorized()
-        print("Authorization completed.")
+
+        print("Telegram готов к работе \033[92m✓\033[0m")
         await asyncio.sleep(3)
         self.hide_console()
+
+    def _print_header(self):
+        width = 46
+        title = "YaMusicTG"
+        version = f"v{self._version()}"
+
+        print()
+        print(f"\033[96m╭{'─' * width}╮\033[0m")
+        print(f"\033[96m│\033[0m{title:^{width}}\033[96m│\033[0m")
+        print(f"\033[96m│\033[0m{version:^{width}}\033[96m│\033[0m")
+        print(f"\033[96m╰{'─' * width}╯\033[0m")
+        print()
+
+    @staticmethod
+    def _version():
+        try:
+            from version import VERSION
+            return VERSION
+        except Exception:
+            return "?"
+
+    @staticmethod
+    def _print_separator():
+        print()
+        print("\033[90m──────────────────────────────────────────────────\033[0m")
+        print()
+
+    @staticmethod
+    def _print_section(title):
+        print(f"\033[96m{title}\033[0m")
+
+    @staticmethod
+    def _print_section_ok(title, message):
+        print(f"\033[96m{title}\033[0m")
+        print(f"\033[92m✓\033[0m {message}")
 
     async def _status_loop(self):
 

@@ -5,7 +5,7 @@ import re
 import urllib.request
 
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 GITHUB_API_URL = (
     "https://api.github.com/repos/Mindcors/YaMusicTg/releases/latest"
@@ -53,7 +53,7 @@ def check_for_updates() -> None:
             print("\033[93m!\033[0m")
             print()
             print("  \033[93mДоступна новая версия!\033[0m")
-            print(f"  Текущая версия: v{VERSION}")
+            print(f"  Текущая версия: {VERSION}")
             print(f"  Новая версия:   {latest_version}")
             print("  Скачать: https://github.com/Mindcors/YaMusicTg/releases/latest")
         else:

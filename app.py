@@ -81,7 +81,7 @@ class Application:
 
                 await self.detector.connect()
                 self.logger.info("Music detector connected")
-                self._print_section_ok("Подключение к Media Session установлено")
+                self._print_section_ok("Подключение установлено")
 
                 await self.tray.start()
                 self.logger.info("Tray started")
@@ -177,7 +177,7 @@ class Application:
     async def _status_loop(self):
 
         self.logger.info("Status loop started")
-        print("Waiting for music...")
+        print("Ожидание музыки...")
 
         while True:
 
@@ -205,9 +205,9 @@ class Application:
                     if ok:
 
                         if status:
-                            print(f"\033[91m[YaMusicTG]\033[0m Telegram bio updated: {status}")
+                            print(f"\033[91m[YaMusicTG]\033[0m Telegram bio обновлён: {status}")
                         else:
-                            print("\033[91m[YaMusicTG]\033[0m Telegram bio cleared")
+                            print("\033[91m[YaMusicTG]\033[0m Telegram bio очищен")
 
                         self._status_sent = True
 
@@ -357,7 +357,12 @@ class Application:
         else:
             text = f"🎵 {title}"
 
-        return text[:70]
+        text = text[:70]
+
+        if text and 0xD800 <= ord(text[-1]) <= 0xDBFF:
+            text = text[:-1]
+
+        return text
 
     @staticmethod
     def _create_logger():

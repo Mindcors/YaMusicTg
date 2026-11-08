@@ -5,7 +5,7 @@ import re
 import urllib.request
 
 
-VERSION = "1.1.1"
+VERSION = "1.2.0"
 
 GITHUB_API_URL = (
     "https://api.github.com/repos/Mindcors/YaMusicTg/releases/latest"
@@ -18,7 +18,7 @@ def _parse_version(version: str) -> tuple[int, ...]:
     match = re.match(r"^(\d+(?:\.\d+)*)", version)
 
     if not match:
-        raise ValueError(f"Invalid version: {version}")
+        raise ValueError(f"Некорректная версия: {version}")
 
     return tuple(
         int(part)
@@ -42,9 +42,12 @@ def check_for_updates() -> None:
         with urllib.request.urlopen(request, timeout=5) as response:
             data = json.loads(response.read().decode("utf-8"))
 
+        if not isinstance(data, dict):
+            raise RuntimeError("Некорректный ответ GitHub API")
+
         latest_version = data.get("tag_name", "").strip()
         if not latest_version:
-            raise RuntimeError("GitHub release does not contain a version tag")
+            raise RuntimeError("Релиз GitHub не содержит тег версии")
 
         current = _parse_version(VERSION)
         latest = _parse_version(latest_version)

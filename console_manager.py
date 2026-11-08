@@ -51,6 +51,39 @@ class ConsoleManager:
 
         self.kernel32.GetConsoleWindow.restype = wintypes.HWND
 
+        self.kernel32.AllocConsole.argtypes = []
+        self.kernel32.AllocConsole.restype = wintypes.BOOL
+        self.kernel32.FreeConsole.argtypes = []
+        self.kernel32.FreeConsole.restype = wintypes.BOOL
+        self.kernel32.SetConsoleCP.argtypes = [wintypes.UINT]
+        self.kernel32.SetConsoleCP.restype = wintypes.BOOL
+        self.kernel32.SetConsoleOutputCP.argtypes = [wintypes.UINT]
+        self.kernel32.SetConsoleOutputCP.restype = wintypes.BOOL
+        self.kernel32.GetStdHandle.argtypes = [wintypes.DWORD]
+        self.kernel32.GetStdHandle.restype = wintypes.HANDLE
+        self.kernel32.GetConsoleMode.argtypes = [
+            wintypes.HANDLE,
+            ctypes.POINTER(wintypes.DWORD),
+        ]
+        self.kernel32.GetConsoleMode.restype = wintypes.BOOL
+        self.kernel32.SetConsoleMode.argtypes = [
+            wintypes.HANDLE,
+            wintypes.DWORD,
+        ]
+        self.kernel32.SetConsoleMode.restype = wintypes.BOOL
+        self.kernel32.SetConsoleTitleW.argtypes = [wintypes.LPCWSTR]
+        self.kernel32.SetConsoleTitleW.restype = wintypes.BOOL
+        self.kernel32.CreateFileW.argtypes = [
+            wintypes.LPCWSTR,
+            wintypes.DWORD,
+            wintypes.DWORD,
+            ctypes.c_void_p,
+            wintypes.DWORD,
+            wintypes.DWORD,
+            wintypes.HANDLE,
+        ]
+        self.kernel32.CreateFileW.restype = wintypes.HANDLE
+
     def show(self):
 
         with self._lock:
@@ -72,8 +105,6 @@ class ConsoleManager:
                         handle,
                         mode.value | ENABLE_VIRTUAL_TERMINAL_PROCESSING,
                     )
-
-                os.system("")
 
                 try:
                     import locale

@@ -1,8 +1,12 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
+import base64
+import ctypes
 import json
 import os
+import subprocess
 import webbrowser
+from ctypes import wintypes
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -27,6 +31,115 @@ DEFAULT_SETTINGS = {
     "proxy_secret": "",
     "check_interval": 5,
 }
+
+
+_ENCRYPTED_PREFIX = "dpapi:"
+
+_SENSITIVE_KEYS = (
+    "api_id",
+    "api_hash",
+    "proxy_host",
+    "proxy_port",
+    "proxy_secret",
+)
+
+
+class _DATA_BLOB(ctypes.Structure):
+    _fields_ = [
+        ("cbData", wintypes.DWORD),
+        ("pbData", ctypes.POINTER(ctypes.c_char)),
+    ]
+
+
+def _dpapi_protect(data: bytes) -> bytes:
+    buffer = ctypes.create_string_buffer(data, len(data))
+    blob_in = _DATA_BLOB(
+        len(data),
+        ctypes.cast(buffer, ctypes.POINTER(ctypes.c_char)),
+    )
+    blob_out = _DATA_BLOB()
+
+    ok = ctypes.windll.crypt32.CryptProtectData(
+        ctypes.byref(blob_in),
+        None,
+        None,
+        None,
+        None,
+        0,
+        ctypes.byref(blob_out),
+    )
+
+    if not ok:
+        raise ctypes.WinError(ctypes.get_last_error())
+
+    try:
+        return ctypes.string_at(blob_out.pbData, blob_out.cbData)
+    finally:
+        ctypes.windll.kernel32.LocalFree(blob_out.pbData)
+
+
+def _dpapi_unprotect(data: bytes) -> bytes:
+    buffer = ctypes.create_string_buffer(data, len(data))
+    blob_in = _DATA_BLOB(
+        len(data),
+        ctypes.cast(buffer, ctypes.POINTER(ctypes.c_char)),
+    )
+    blob_out = _DATA_BLOB()
+
+    ok = ctypes.windll.crypt32.CryptUnprotectData(
+        ctypes.byref(blob_in),
+        None,
+        None,
+        None,
+        None,
+        0,
+        ctypes.byref(blob_out),
+    )
+
+    if not ok:
+        raise ctypes.WinError(ctypes.get_last_error())
+
+    try:
+        return ctypes.string_at(blob_out.pbData, blob_out.cbData)
+    finally:
+        ctypes.windll.kernel32.LocalFree(blob_out.pbData)
+
+
+def _encrypt_value(value) -> str:
+    raw = str(value).encode("utf-8")
+    encoded = base64.b64encode(_dpapi_protect(raw)).decode("ascii")
+    return _ENCRYPTED_PREFIX + encoded
+
+
+def _decrypt_value(value: str) -> str:
+    raw = base64.b64decode(value[len(_ENCRYPTED_PREFIX):])
+    return _dpapi_unprotect(raw).decode("utf-8")
+
+
+def _restrict_acl(path: Path) -> None:
+    user = os.environ.get("USERNAME", "")
+    if not user:
+        return
+
+    try:
+        subprocess.run(
+            [
+                "icacls",
+                str(path),
+                "/inheritance:r",
+                "/grant:r",
+                f"{user}:(OI)(CI)F",
+                "SYSTEM:(OI)(CI)F",
+                "/c",
+            ],
+            check=False,
+            capture_output=True,
+        )
+    except Exception:
+        pass
+
+
+_restrict_acl(APP_DIR)
 
 
 def parse_proxy_link(link: str) -> tuple[str, int, str]:
@@ -102,7 +215,42 @@ class Settings:
                     self.data[key] = value
                     changed = True
 
-            if changed:
+            migrated = False
+
+            for key in _SENSITIVE_KEYS:
+                if key not in self.data:
+                    continue
+
+                value = self.data[key]
+
+                if (
+                    isinstance(value, str)
+                    and value.startswith(_ENCRYPTED_PREFIX)
+                ):
+                    try:
+                        self.data[key] = _decrypt_value(value)
+                    except Exception:
+                        raise RuntimeError(
+                            "Не удалось расшифровать файл настроек. "
+                            "Удалите settings.json и настройте "
+                            "программу заново."
+                        )
+                else:
+                    migrated = True
+
+            api_id = self.data.get("api_id")
+            self.data["api_id"] = (
+                int(api_id) if api_id not in (None, "") else None
+            )
+
+            proxy_port = self.data.get("proxy_port")
+            self.data["proxy_port"] = (
+                int(proxy_port)
+                if proxy_port not in (None, "")
+                else DEFAULT_SETTINGS["proxy_port"]
+            )
+
+            if migrated or changed:
                 self.save()
 
         else:
@@ -236,7 +384,8 @@ class Settings:
         )
 
         print(
-            f"Secret: {self.data['proxy_secret']}"
+            "Secret: "
+            + "*" * len(str(self.data["proxy_secret"]))
         )
 
         print()
@@ -261,13 +410,21 @@ class Settings:
 
     def save(self):
 
+        payload = {}
+
+        for key, value in self.data.items():
+            if key in _SENSITIVE_KEYS and value is not None:
+                payload[key] = _encrypt_value(value)
+            else:
+                payload[key] = value
+
         with SETTINGS_FILE.open(
             "w",
             encoding="utf-8",
         ) as f:
 
             json.dump(
-                self.data,
+                payload,
                 f,
                 indent=4,
                 ensure_ascii=False,

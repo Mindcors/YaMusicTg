@@ -82,7 +82,14 @@ class TelegramProfile:
             self.config = load_settings()
 
             if self.api_id is None:
-                self.api_id = int(self.config["api_id"])
+                api_id = self.config.get("api_id")
+                if api_id in (None, ""):
+                    raise RuntimeError(
+                        "Telegram API ID не настроен. "
+                        "Удалите файл настроек и запустите "
+                        "программу заново."
+                    )
+                self.api_id = int(api_id)
 
             if self.api_hash is None:
                 self.api_hash = self.config["api_hash"]
@@ -118,7 +125,7 @@ class TelegramProfile:
             self.logger.info("Telegram session is already authorized")
             return
 
-        phone = await self._read_line("Telegram phone number: ")
+        phone = await self._read_line("Номер телефона Telegram: ")
         try:
             sent_code = await self.client.send_code_request(phone)
         except FloodWaitError:
@@ -129,7 +136,7 @@ class TelegramProfile:
             raise
 
         for attempt in range(3):
-            code = await self._read_line("Telegram login code: ")
+            code = await self._read_password("Код входа Telegram: ")
             try:
                 await self.client.sign_in(
                     phone=phone,
@@ -149,7 +156,7 @@ class TelegramProfile:
                 self.logger.exception("Telegram flood wait while signing in")
                 raise
             except SessionPasswordNeededError:
-                password = await self._read_password("Telegram 2FA password: ")
+                password = await self._read_password("Пароль 2FA Telegram: ")
                 try:
                     await self.client.sign_in(password=password)
                 except FloodWaitError:
@@ -164,18 +171,18 @@ class TelegramProfile:
                 raise
 
         if not await self.client.is_user_authorized():
-            raise RuntimeError("Telegram authorization did not complete")
+            raise RuntimeError("Авторизация в Telegram не завершена")
         self.logger.info("Telegram authorization completed")
 
     async def start_authorized(self) -> None:
         await self.connect()
         if not await self.client.is_user_authorized():
-            raise RuntimeError("Telegram client is not authorized")
+            raise RuntimeError("Клиент Telegram не авторизован")
         self.logger.info("Telegram client is ready")
 
     async def disconnect(self) -> None:
         async with self._disconnect_lock:
-            if self.client.is_connected():
+            if self.client is not None and self.client.is_connected():
                 await self.client.disconnect()
                 self.logger.info("Telegram client disconnected")
 

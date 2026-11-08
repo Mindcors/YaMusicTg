@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import asyncio
 import concurrent.futures
@@ -81,7 +81,7 @@ class Application:
 
                 await self.detector.connect()
                 self.logger.info("Music detector connected")
-                self._print_section_ok("Музыкальный монитор", "Подключение к Media Session установлено")
+                self._print_section_ok("Подключение к Media Session установлено")
 
                 await self.tray.start()
                 self.logger.info("Tray started")
@@ -117,11 +117,11 @@ class Application:
         self._print_section("Подключение к Telegram")
         print("Подключение...", end=" ", flush=True)
         await self.telegram.connect()
-        print("\033[92m✓\033[0m")
+        print("\033[91m✓\033[0m")
 
         print("Проверка авторизации...", end=" ", flush=True)
         authorized = await self.telegram.is_authorized()
-        print("\033[92m✓\033[0m")
+        print("\033[91m✓\033[0m")
 
         if not authorized:
             self.show_console()
@@ -136,7 +136,7 @@ class Application:
 
         await self.telegram.start_authorized()
 
-        print("Telegram готов к работе \033[92m✓\033[0m")
+        print("Telegram готов к работе \033[91m✓\033[0m")
         await asyncio.sleep(3)
         self.hide_console()
 
@@ -146,10 +146,10 @@ class Application:
         version = f"v{self._version()}"
 
         print()
-        print(f"\033[96m╭{'─' * width}╮\033[0m")
-        print(f"\033[96m│\033[0m{title:^{width}}\033[96m│\033[0m")
-        print(f"\033[96m│\033[0m{version:^{width}}\033[96m│\033[0m")
-        print(f"\033[96m╰{'─' * width}╯\033[0m")
+        print(f"\033[91m╭{'─' * width}╮\033[0m")
+        print(f"\033[91m│\033[0m{title:^{width}}\033[91m│\033[0m")
+        print(f"\033[91m│\033[0m{version:^{width}}\033[91m│\033[0m")
+        print(f"\033[91m╰{'─' * width}╯\033[0m")
         print()
 
     @staticmethod
@@ -168,12 +168,11 @@ class Application:
 
     @staticmethod
     def _print_section(title):
-        print(f"\033[96m{title}\033[0m")
+        print(f"\033[91m{title}\033[0m")
 
     @staticmethod
-    def _print_section_ok(title, message):
-        print(f"\033[96m{title}\033[0m")
-        print(f"\033[92m✓\033[0m {message}")
+    def _print_section_ok(message):
+        print(f"\033[91m✓\033[0m {message}")
 
     async def _status_loop(self):
 

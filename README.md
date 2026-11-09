@@ -47,7 +47,7 @@
 **1. Клонируйте репозиторий:**
 
 ```bash
-git clone <REPOSITORY_URL>
+git clone https://github.com/Mindcors/YaMusicTg.git
 cd YaMusicTG
 ```
 

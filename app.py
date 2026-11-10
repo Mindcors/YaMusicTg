@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import subprocess
 import time
 from settings import load_settings
 from version import check_for_updates
@@ -17,6 +18,30 @@ from tray import TrayIcon
 
 
 T = TypeVar("T")
+
+
+def _restore_app_dir_permissions(path: Path) -> None:
+
+    try:
+        os.chmod(path / "YaMusicTG.log", 0o666)
+    except OSError:
+        pass
+
+    try:
+        subprocess.run(
+            [
+                "icacls",
+                str(path),
+                "/reset",
+                "/t",
+                "/c",
+                "/q",
+            ],
+            check=False,
+            capture_output=True,
+        )
+    except Exception:
+        pass
 
 
 class Application:
@@ -403,13 +428,36 @@ class Application:
             exist_ok=True,
         )
 
-        logging.basicConfig(
-            filename=path / "YaMusicTG.log",
-            level=logging.INFO,
-            format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-            encoding="utf-8",
-        )
+        config = {
+            "level": logging.INFO,
+            "format": "%(asctime)s %(levelname)s %(name)s: %(message)s",
+            "encoding": "utf-8",
+        }
 
-        logger = logging.getLogger("MusicTG")
+        log_file = path / "YaMusicTG.log"
+
+        try:
+            logging.basicConfig(filename=log_file, **config)
+        except PermissionError:
+            _restore_app_dir_permissions(path)
+
+            try:
+                logging.basicConfig(filename=log_file, **config)
+            except OSError:
+                log_file = (
+                    Path(os.environ.get("TEMP", Path.home()))
+                    / "YaMusicTG.log"
+                )
+                logging.basicConfig(filename=log_file, **config)
+
+                print()
+                print(
+                    f"Нет доступа к папке {path} "
+                    "(вероятно, она скопирована с другого компьютера)."
+                )
+                print(f"Журнал сохраняется во временной папке: {log_file}")
+                print()
+
+        logger = logging.getLogger("YaMusicTG")
         logger.setLevel(logging.INFO)
         return logger

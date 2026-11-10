@@ -202,11 +202,18 @@ class Settings:
 
         if SETTINGS_FILE.exists():
 
-            with SETTINGS_FILE.open(
-                "r",
-                encoding="utf-8",
-            ) as f:
-                self.data = json.load(f)
+            try:
+                with SETTINGS_FILE.open(
+                    "r",
+                    encoding="utf-8",
+                ) as f:
+                    self.data = json.load(f)
+            except PermissionError:
+                raise RuntimeError(
+                    "Нет доступа к файлу настроек. Вероятно, папка "
+                    f"{APP_DIR} скопирована с другого компьютера. "
+                    "Удалите эту папку и настройте программу заново."
+                )
 
             changed = False
 
@@ -418,16 +425,23 @@ class Settings:
             else:
                 payload[key] = value
 
-        with SETTINGS_FILE.open(
-            "w",
-            encoding="utf-8",
-        ) as f:
+        try:
+            with SETTINGS_FILE.open(
+                "w",
+                encoding="utf-8",
+            ) as f:
 
-            json.dump(
-                payload,
-                f,
-                indent=4,
-                ensure_ascii=False,
+                json.dump(
+                    payload,
+                    f,
+                    indent=4,
+                    ensure_ascii=False,
+                )
+        except PermissionError:
+            raise RuntimeError(
+                "Нет доступа к файлу настроек. Вероятно, папка "
+                f"{APP_DIR} скопирована с другого компьютера. "
+                "Удалите эту папку и настройте программу заново."
             )
 
 

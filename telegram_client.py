@@ -2,18 +2,23 @@ from __future__ import annotations
 
 import asyncio
 from telethon import functions
-import getpass
 import logging
+import msvcrt
 import os
+import re
+import threading
 import time
 from pathlib import Path
 
 from telethon import TelegramClient
+
+from console_manager import ensure_console_width
 from telethon.network.connection.tcpmtproxy import (
     ConnectionTcpMTProxyRandomizedIntermediate,
 )
 from telethon.errors import (
     FloodWaitError,
+    PasswordHashInvalidError,
     PhoneCodeExpiredError,
     PhoneCodeInvalidError,
     SessionPasswordNeededError,
@@ -135,7 +140,120 @@ class TelegramProfile:
             self.logger.info("Telegram session is already authorized")
             return
 
+        if not await self._login_with_qr():
+            await self._login_with_code()
+
+        if not await self.client.is_user_authorized():
+            raise RuntimeError("Авторизация в Telegram не завершена")
+        self._deauthorized = False
+        self.logger.info("Telegram authorization completed")
+
+    async def _login_with_qr(self) -> bool:
+        print()
+        print("Авторизация через QR-код")
+        print()
+
+        try:
+            import qrcode
+        except ImportError:
+            self.logger.error(
+                "qrcode module is not installed; falling back to code login"
+            )
+            return False
+
+        try:
+            qr = await self.client.qr_login()
+        except FloodWaitError:
+            self.logger.exception(
+                "Telegram flood wait while requesting QR token"
+            )
+            raise
+        except Exception:
+            self.logger.exception("QR login is unavailable")
+            return False
+
+        while True:
+            self._render_qr(qr.url, qrcode)
+
+            wait_task = asyncio.ensure_future(qr.wait())
+            stop_watcher = threading.Event()
+            cancel_task = asyncio.ensure_future(
+                asyncio.to_thread(
+                    self._watch_cancel_key, stop_watcher
+                )
+            )
+
+            done, pending = await asyncio.wait(
+                {wait_task, cancel_task},
+                return_when=asyncio.FIRST_COMPLETED,
+            )
+
+            stop_watcher.set()
+
+            for task in pending:
+                task.cancel()
+
+            if cancel_task in done and wait_task.cancelled():
+                print("\033[2J\033[H", end="")
+                print()
+                print("Вход по QR-коду отменён.")
+                print()
+                return False
+
+            try:
+                await wait_task
+            except asyncio.TimeoutError:
+                try:
+                    await qr.recreate()
+                except FloodWaitError:
+                    self.logger.exception(
+                        "Telegram flood wait while refreshing QR"
+                    )
+                    raise
+                except Exception:
+                    self.logger.exception("QR refresh failed")
+                    return False
+                continue
+            except SessionPasswordNeededError:
+                print("\033[2J\033[H", end="")
+                await self._prompt_2fa_password()
+                return True
+            except asyncio.CancelledError:
+                return False
+            except Exception:
+                self.logger.exception("QR login failed")
+                return False
+
+            return True
+
+    async def _prompt_2fa_password(self) -> None:
+        print()
+        print("Включена двухфакторная защита аккаунта.")
+        print()
+
+        for attempt in range(3):
+            password = await self._read_password("Пароль 2FA Telegram: ")
+            try:
+                await self.client.sign_in(password=password)
+                return
+            except PasswordHashInvalidError:
+                if attempt == 2:
+                    self.logger.exception("Telegram 2FA password was invalid")
+                    raise
+                print("  \033[91m✗\033[0m Неверный пароль. Попробуйте ещё раз.")
+            except FloodWaitError:
+                self.logger.exception(
+                    "Telegram flood wait while submitting 2FA password"
+                )
+                raise
+
+    async def _login_with_code(self) -> None:
+        print()
+        print("Вход по номеру телефона")
+        print()
+
         phone = await self._read_line("Номер телефона Telegram: ")
+        phone = self._normalize_phone(phone)
         try:
             sent_code = await self.client.send_code_request(phone)
         except FloodWaitError:
@@ -166,24 +284,11 @@ class TelegramProfile:
                 self.logger.exception("Telegram flood wait while signing in")
                 raise
             except SessionPasswordNeededError:
-                password = await self._read_password("Пароль 2FA Telegram: ")
-                try:
-                    await self.client.sign_in(password=password)
-                except FloodWaitError:
-                    self.logger.exception("Telegram flood wait while submitting 2FA password")
-                    raise
-                except Exception:
-                    self.logger.exception("Telegram 2FA sign-in failed")
-                    raise
+                await self._prompt_2fa_password()
                 break
             except Exception:
                 self.logger.exception("Telegram sign-in failed")
                 raise
-
-        if not await self.client.is_user_authorized():
-            raise RuntimeError("Авторизация в Telegram не завершена")
-        self._deauthorized = False
-        self.logger.info("Telegram authorization completed")
 
     async def start_authorized(self) -> None:
         await self.connect()
@@ -199,9 +304,86 @@ class TelegramProfile:
                 self.logger.info("Telegram client disconnected")
 
     @staticmethod
+    def _normalize_phone(raw: str) -> str:
+        digits = re.sub(r"\D", "", raw)
+
+        if len(digits) == 11 and digits[0] in ("7", "8"):
+            digits = "7" + digits[1:]
+
+        return "+" + digits
+
+    @staticmethod
+    def _render_qr(url: str, qrcode_module) -> None:
+        code = qrcode_module.QRCode(
+            border=1,
+            error_correction=qrcode_module.constants.ERROR_CORRECT_L,
+        )
+        code.add_data(url)
+        code.make(fit=True)
+
+        ensure_console_width((code.modules_count + 2) * 2 + 4)
+
+        print("\033[2J\033[H", end="")
+        print("Отсканируйте этот QR-код в приложении Telegram:")
+        print("Настройки → Устройства → Подключить устройство.")
+        print()
+        code.print_ascii(invert=True)
+        print()
+        print("Нажмите Esc для входа по номеру телефона и коду.")
+        print()
+
+    @staticmethod
+    def _watch_cancel_key(stop: threading.Event) -> None:
+        time.sleep(0.3)
+
+        while not stop.is_set():
+            if msvcrt.kbhit():
+                ch = msvcrt.getwch()
+
+                if ch == "\x1b":
+                    return
+
+                if ch in ("\x00", "\xe0"):
+                    msvcrt.getwch()
+
+            time.sleep(0.05)
+
+    @staticmethod
     async def _read_line(prompt: str) -> str:
         return (await asyncio.to_thread(input, prompt)).strip()
 
     @staticmethod
     async def _read_password(prompt: str) -> str:
-        return await asyncio.to_thread(getpass.getpass, prompt)
+        return (
+            await asyncio.to_thread(TelegramProfile._read_password_sync, prompt)
+        ).strip()
+
+    @staticmethod
+    def _read_password_sync(prompt: str) -> str:
+        print(prompt, end="", flush=True)
+
+        chars = []
+
+        while True:
+            ch = msvcrt.getwch()
+
+            if ch in ("\r", "\n"):
+                print()
+                break
+
+            if ch == "\x03":
+                raise KeyboardInterrupt
+
+            if ch in ("\x00", "\xe0"):
+                msvcrt.getwch()
+                continue
+
+            if ch in ("\x08", "\x7f"):
+                if chars:
+                    chars.pop()
+                    print("\b \b", end="", flush=True)
+                continue
+
+            chars.append(ch)
+
+        return "".join(chars)

@@ -10,6 +10,62 @@ from ctypes import wintypes
 import msvcrt
 
 
+def ensure_console_width(min_width: int) -> None:
+
+    class COORD(ctypes.Structure):
+        _fields_ = [("X", ctypes.c_short), ("Y", ctypes.c_short)]
+
+    class SMALL_RECT(ctypes.Structure):
+        _fields_ = [
+            ("Left", ctypes.c_short),
+            ("Top", ctypes.c_short),
+            ("Right", ctypes.c_short),
+            ("Bottom", ctypes.c_short),
+        ]
+
+    class CONSOLE_SCREEN_BUFFER_INFO(ctypes.Structure):
+        _fields_ = [
+            ("dwSize", COORD),
+            ("dwCursorPosition", COORD),
+            ("wAttributes", ctypes.c_ushort),
+            ("srWindow", SMALL_RECT),
+            ("dwMaximumWindowSize", COORD),
+        ]
+
+    kernel32 = ctypes.windll.kernel32
+    kernel32.GetStdHandle.restype = wintypes.HANDLE
+    kernel32.GetStdHandle.argtypes = [wintypes.DWORD]
+
+    handle = kernel32.GetStdHandle(-11)
+    info = CONSOLE_SCREEN_BUFFER_INFO()
+
+    if not kernel32.GetConsoleScreenBufferInfo(
+        handle, ctypes.byref(info)
+    ):
+        return
+
+    window_width = info.srWindow.Right - info.srWindow.Left + 1
+    if window_width >= min_width:
+        return
+
+    target = min(min_width, info.dwMaximumWindowSize.X)
+    if target <= window_width:
+        return
+
+    if info.dwSize.X < target:
+        kernel32.SetConsoleScreenBufferSize(
+            handle, COORD(target, info.dwSize.Y)
+        )
+
+    rect = SMALL_RECT(
+        info.srWindow.Left,
+        info.srWindow.Top,
+        info.srWindow.Left + target - 1,
+        info.srWindow.Bottom,
+    )
+    kernel32.SetConsoleWindowInfo(handle, True, ctypes.byref(rect))
+
+
 class ConsoleManager:
     SW_HIDE = 0
     SW_SHOW = 5

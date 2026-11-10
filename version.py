@@ -5,7 +5,7 @@ import re
 import urllib.request
 
 
-VERSION = "1.2.1"
+VERSION = "1.2.2"
 
 GITHUB_API_URL = (
     "https://api.github.com/repos/Mindcors/YaMusicTg/releases/latest"

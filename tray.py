@@ -219,11 +219,6 @@ class TrayIcon:
         if thread is not None and thread.is_alive() and thread is not threading.current_thread():
             await asyncio.to_thread(thread.join)
 
-    def refresh(self) -> None:
-        hwnd = self._hwnd
-        if hwnd:
-            user32.PostMessageW(hwnd, self.WM_TRAYICON, 0, self.WM_CONTEXTMENU)
-
     def _message_loop(self) -> None:
         try:
             self._hinstance = kernel32.GetModuleHandleW(None)

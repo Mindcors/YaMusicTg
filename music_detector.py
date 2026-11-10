@@ -19,9 +19,6 @@ class MusicDetector:
     async def connect(self):
         self.manager = await MediaManager.request_async()
 
-    async def reconnect(self):
-        await self.connect()
-
     async def _session(self):
 
         if self.manager is None:

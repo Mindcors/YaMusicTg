@@ -5,6 +5,7 @@ from telethon import functions
 import getpass
 import logging
 import os
+import time
 from pathlib import Path
 
 from telethon import TelegramClient
@@ -38,11 +39,23 @@ class TelegramProfile:
         self.session_file = self.session_path.with_suffix(".session")
         self.client = None
         self._disconnect_lock = asyncio.Lock()
+        self._flood_wait_until = 0.0
+        self._deauthorized = False
+
+    def flood_wait_remaining(self) -> float:
+        return max(0.0, self._flood_wait_until - time.monotonic())
+
+    def is_deauthorized(self) -> bool:
+        return self._deauthorized
+
     async def set_about(self, text: str) -> bool:
         await self.connect()
 
         if not await self.client.is_user_authorized():
+            self._deauthorized = True
             return False
+
+        self._deauthorized = False
 
         try:
             await self.client(
@@ -54,6 +67,7 @@ class TelegramProfile:
             return True
 
         except FloodWaitError as e:
+            self._flood_wait_until = time.monotonic() + e.seconds
             self.logger.warning(
                 "FloodWait %s seconds while updating bio",
                 e.seconds,
@@ -70,11 +84,7 @@ class TelegramProfile:
         path.mkdir(parents=True, exist_ok=True)
         return path
 
-    def has_session(self) -> bool:
-        return self.session_file.exists()
-
     async def connect(self) -> None:
-        
         if self.config is None:
 
             from settings import load_settings
@@ -172,12 +182,14 @@ class TelegramProfile:
 
         if not await self.client.is_user_authorized():
             raise RuntimeError("Авторизация в Telegram не завершена")
+        self._deauthorized = False
         self.logger.info("Telegram authorization completed")
 
     async def start_authorized(self) -> None:
         await self.connect()
         if not await self.client.is_user_authorized():
             raise RuntimeError("Клиент Telegram не авторизован")
+        self._deauthorized = False
         self.logger.info("Telegram client is ready")
 
     async def disconnect(self) -> None:
@@ -185,9 +197,6 @@ class TelegramProfile:
             if self.client is not None and self.client.is_connected():
                 await self.client.disconnect()
                 self.logger.info("Telegram client disconnected")
-
-    def raw_client(self) -> TelegramClient:
-        return self.client
 
     @staticmethod
     async def _read_line(prompt: str) -> str:

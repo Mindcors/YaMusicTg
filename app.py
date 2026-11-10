@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 import asyncio
-import concurrent.futures
-import inspect
 import logging
 import os
-import sys
 import time
 from settings import load_settings
 from version import check_for_updates
-from collections.abc import Awaitable, Callable, Coroutine
+from collections.abc import Coroutine
 from pathlib import Path
 from typing import TypeVar
 
@@ -52,6 +49,7 @@ class Application:
         self._last_status: str = ""
         self._last_update = 0.0
         self._status_sent = True
+        self._deauth_notified = False
         self.settings = None
 
     @property
@@ -200,9 +198,35 @@ class Application:
                     and now - self._last_update >= self.settings["check_interval"]
                 ):
 
+                    if self.telegram.is_deauthorized():
+                        if not self._deauth_notified:
+                            self._deauth_notified = True
+                            self.logger.error(
+                                "Telegram session is no longer authorized"
+                            )
+                            self.show_console()
+                            print(
+                                "\033[91m[YaMusicTG]\033[0m Сессия Telegram "
+                                "недействительна (возможно, завершена в "
+                                "настройках аккаунта)."
+                            )
+                            print(
+                                "\033[91m[YaMusicTG]\033[0m Перезапустите "
+                                "программу и войдите заново."
+                            )
+                        await asyncio.sleep(5)
+                        continue
+
+                    flood_wait = self.telegram.flood_wait_remaining()
+                    if flood_wait > 0:
+                        await asyncio.sleep(min(flood_wait, 5))
+                        continue
+
                     ok = await self.telegram.set_about(status)
 
                     if ok:
+
+                        self._deauth_notified = False
 
                         if status:
                             print(f"\033[91m[YaMusicTG]\033[0m Telegram bio обновлён: {status}")
@@ -384,11 +408,6 @@ class Application:
             level=logging.INFO,
             format="%(asctime)s %(levelname)s %(name)s: %(message)s",
             encoding="utf-8",
-        )
-
-        path.mkdir(
-            parents=True,
-            exist_ok=True,
         )
 
         logger = logging.getLogger("MusicTG")

@@ -60,7 +60,7 @@ py -3.12 -m pip install telethon winsdk pyinstaller python-socks
 **3. Запустите приложение:**
 
 ```bash
-py -3.12 app.py
+py -3.12 main.py
 ```
 
 > При первом запуске программа запросит **Telegram API ID**, **API Hash** и **MTProto Proxy Secret**.
@@ -80,7 +80,7 @@ py -3.12 -m pip install pyinstaller
 Соберите приложение:
 
 ```bash
-py -3.12 -m PyInstaller --onefile --windowed --clean --noconfirm --name YaMusicTG --icon=icon.ico --add-data "icon.ico;." --hidden-import pystray --hidden-import PIL --hidden-import PIL.Image --hidden-import PIL.ImageDraw --collect-all pystray main.py
+py -3.12 -m PyInstaller --onefile --windowed --clean --noconfirm --name YaMusicTG --icon=icon.ico --add-data "icon.ico;." --collect-all winsdk main.py
 ```
 
 Готовый файл появится в:
